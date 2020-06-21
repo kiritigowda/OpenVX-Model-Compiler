@@ -1,3 +1,7 @@
+[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
+<p align="center"><img width="60%" src="https://upload.wikimedia.org/wikipedia/en/thumb/d/dd/OpenVX_logo.svg/1920px-OpenVX_logo.svg.png" /></p>
+
 # OpenVX Neural Net Model Compiler & Optimizer
 
 <p align="center"><img width="80%" src="data/images/modelCompilerWorkflow.png" /></p>
