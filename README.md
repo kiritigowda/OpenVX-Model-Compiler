@@ -8,7 +8,7 @@
 
 OpenVX Neural Net Model Compiler & Optimizer converts pre-trained neural network models to OpenVX runtime code for optimized inference.
 
-* [OpenVX RunTime](#mivisionx-runtime)
+* [OpenVX RunTime](#openvx-runtime)
 * [Pre-requisites](#pre-requisites)
 * [Model Compiler & Optimizer Usage](#model-compiler--optimizer-usage)
 * [Examples for OpenVX C code generation](#examples-for-openvx-c-code-generation)
@@ -152,7 +152,8 @@ Usage: python nnir_to_openvx.py [OPTIONS] <nnirInputFolder> <outputFolder>
 
 ## Examples for OpenVX C code generation
 
-Generate OpenVX and test code that can be used dump and compare raw tensor data:
+* Generate OpenVX and test code that can be used dump and compare raw tensor data:
+
 ````
 % python nnir_to_openvx.py nnirInputFolderFused openvxCodeFolder
 % mkdir openvxCodeFolder/build
@@ -160,7 +161,9 @@ Generate OpenVX and test code that can be used dump and compare raw tensor data:
 % cmake ..
 % make
 % ./anntest
-
+````
+**Note:**
+```
 Usage: anntest <weights.bin> [<input-data-file(s)> [<output-data-file(s)>]]<--add ADD> <--multiply MULTIPLY>]
 
    <input-data-file>: is filename to initialize tensor
@@ -182,9 +185,9 @@ Usage: anntest <weights.bin> [<input-data-file(s)> [<output-data-file(s)>]]<--ad
 
 % ./anntest ../weights.bin input.f32 output.f32,reference.f32,1e-6,1e-9 --add -2.1,-2.07,-1.8 --multiply 0.017,0.017,0.017
 ...
-````
+```
 
-Generate OpenVX and test code with argmax that can be used dump and compare 16-bit argmax output tensor:
+* Generate OpenVX and test code with argmax that can be used dump and compare 16-bit argmax output tensor:
 ````
 % python nnir_to_openvx.py --argmax UINT16 nnirInputFolderFused openvxCodeFolder
 % mkdir openvxCodeFolder/build
@@ -192,7 +195,9 @@ Generate OpenVX and test code with argmax that can be used dump and compare 16-b
 % cmake ..
 % make
 % ./anntest
-
+````
+**Note:**
+```
 Usage: anntest <weights.bin> [<input-data-file(s)> [<output-data-file(s)>]]]
 
    <input-data-file>: is filename to initialize tensor
@@ -209,9 +214,9 @@ Usage: anntest <weights.bin> [<input-data-file(s)> [<output-data-file(s)>]]]
 
 % ./anntest ../weights.bin input-%04d.png output.u16,reference.u16,0.01
 ...
-````
+```
 
-Generate OpenVX and test code with argmax and LUT that is designed for semantic segmentation use cases. You can dump output in raw format or PNGs and additionally compare with reference data in raw format.
+* Generate OpenVX and test code with argmax and LUT that is designed for semantic segmentation use cases. You can dump output in raw format or PNGs and additionally compare with reference data in raw format.
 ````
 % python nnir_to_openvx.py --argmax lut-rgb.txt nnirInputFolderFused openvxCodeFolder
 % mkdir openvxCodeFolder/build
@@ -219,7 +224,9 @@ Generate OpenVX and test code with argmax and LUT that is designed for semantic 
 % cmake ..
 % make
 % ./anntest
-
+````
+**Note:**
+```
 Usage: anntest <weights.bin> [<input-data-file(s)> [<output-data-file(s)>]]]
 
    <input-data-file>: is filename to initialize tensor
@@ -240,7 +247,7 @@ Usage: anntest <weights.bin> [<input-data-file(s)> [<output-data-file(s)>]]]
 ...
 % ./anntest ../weights.bin input-%04d.png output-%04d.png,reference.rgb,0.01
 ...
-````
+```
 
 Test code with preprocessing add / multiply values to normalize the input tensor. Some models(e.g. Inception v4) require input tensor to be normalized. You can pass the preprocessing values using --add & --multiply option.
 
