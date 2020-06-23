@@ -1085,7 +1085,6 @@ VX_API_ENTRY int VX_API_CALL annRunInference(pyif_ann_handle handle, float * inp
 #include <stdio.h>
 #include <string.h>
 #include <string>
-#include <vx_ext_amd.h>
 
 static void VX_CALLBACK log_callback(vx_context context, vx_reference ref, vx_status status, const vx_char string[])
 {
