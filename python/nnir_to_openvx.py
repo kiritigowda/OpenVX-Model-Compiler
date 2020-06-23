@@ -211,7 +211,7 @@ def generateModuleH(graph,fileName,virtual_tensor_flag):
 #include <VX/vx.h>
 #include <map>
 
-# TBD: Temp support for FP16
+// TBD: Temp support for FP16
 #define vx_float16 vx_float32
 #define VX_TYPE_FLOAT16 VX_TYPE_FLOAT32
 
