@@ -312,7 +312,6 @@ static vx_status initializeTensor(vx_context context, vx_tensor tensor, FILE * f
 {
     vx_context context = vxGetContext((vx_reference)graph);
     ERROR_CHECK_OBJECT(context);
-    ERROR_CHECK_STATUS(vxLoadKernels(context, "vx_nn"));
 
     // create variables
 """ % (', '.join(['vx_tensor ' + tensor.name for tensor in graph.inputs]), \
