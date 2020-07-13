@@ -22,12 +22,13 @@ import sys
 from nnir import *
 
 def main():
-    usage = 'Usage: python nnir-update.py [--batch-size <n>] [--fuse-ops 0|1] [--slice-groups 0|1] [--convert-fp16 0|1] [--convert-fp32 0|1] [--node_type_append 0|1] <nnirInputFolder> <nnirOutputFolder>'
+    usage = 'Usage: python nnir-update.py [--batch-size <n>] [--fuse-ops 0|1] [--slice-groups 0|1] [--convert-fp16 0|1] [--convert-int16 0|1] [--convert-fp32 0|1] [--node_type_append 0|1] <nnirInputFolder> <nnirOutputFolder>'
     batchSize = 0
     fuseOps = False
     sliceGroups = False
     convertFp16 = False
     convertFp32 = False
+    convertInt16 = False
     node_type_append = 0
     pos = 1
     while len(sys.argv[pos:]) >= 2 and sys.argv[pos][:2] == '--':
@@ -45,6 +46,9 @@ def main():
             pos = pos + 2
         elif sys.argv[pos] == '--convert-fp32':
             convertFp32 = False if int(sys.argv[pos+1]) == 0 else True
+            pos = pos + 2
+        elif sys.argv[pos] == '--convert-int16':
+            convertInt16 = False if int(sys.argv[pos+1]) == 0 else True
             pos = pos + 2
         elif sys.argv[pos] == '--node_type_append':
             node_type_append = int(sys.argv[pos+1])
@@ -71,6 +75,8 @@ def main():
         graph.convertFp16()   
     if  convertFp32:
         graph.convertFp32()   
+    if  convertInt16:
+        graph.convertInt16()
     print('writing IR model into ' + outputFolder + ' ...')
     graph.toFile(outputFolder, node_type_append)
 

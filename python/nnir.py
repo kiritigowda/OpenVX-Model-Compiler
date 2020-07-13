@@ -806,7 +806,45 @@ class IrGraph:
             self.all_F016 = True    
         else:
             raise ValueError("The type is alreary Fp16")
-            
+    
+    def convertInt16(self):
+        keepAsFP32 = []
+
+        for node in self.nodes:
+           if node.type == 'batch_norm':
+                keepAsFP32.append(node.inputs[1])
+                keepAsFP32.append(node.inputs[2])
+                keepAsFP32.append(node.inputs[3])
+                keepAsFP32.append(node.inputs[4])
+        if self.all_F032:
+            for tensor in self.inputs:
+                tensor.type = 'I016'
+                self.tensor_types[tensor.name] = tensor.type
+                self.tensor_dict[tensor.name] = tensor
+            for tensor in self.outputs:
+                tensor.type = 'I016'
+                self.tensor_types[tensor.name] = tensor.type
+                self.tensor_dict[tensor.name] = tensor
+            for tensor in self.locals:
+                tensor.type = 'I016'
+                self.tensor_types[tensor.name] = tensor.type
+                self.tensor_dict[tensor.name] = tensor
+            for tensor in self.initializers:
+                if tensor.name not in keepAsFP32:    
+                    tensor.type = 'I016'
+                    self.tensor_types[tensor.name] = tensor.type
+                    self.tensor_dict[tensor.name] = tensor
+            for idx, binary in enumerate(self.binaries):
+                if binary not in keepAsFP32:
+                    weight = np.frombuffer(self.binaries[binary], dtype=np.float32)
+                    self.addBinary(binary, np.getbuffer(weight.astype(np.int16)))
+
+                print("Add binary %s of size %d at Idx: %d len: %d" %(binary, len(self.binaries[binary]), idx, len(self.binaries)))
+            self.all_F032 = False
+            self.all_F016 = True    
+        else:
+            raise ValueError("The type is alreary Int16")
+
     def convertFp32(self):
         convertFromFP64 = []
         convertFromINT32 = []
