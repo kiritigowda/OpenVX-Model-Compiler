@@ -121,7 +121,7 @@ endif()
 
 list(APPEND SOURCES annmodule.cpp)
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mf16c -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 target_link_libraries(${PROJECT_NAME} ${OPENVX_LIBRARIES})
 
 add_executable(anntest anntest.cpp)
@@ -136,7 +136,7 @@ endif(OpenCV_FOUND)
 target_link_libraries(anntest ${OPENVX_LIBRARIES} ${PROJECT_NAME})
 
 add_library(annpython SHARED annpython.cpp)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mf16c -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 target_link_libraries(annpython ${PROJECT_NAME} ${OPENVX_LIBRARIES})
 """)
     if not os.path.isdir(outputFolder + '/cmake'):
@@ -1713,7 +1713,7 @@ def generateTestCPP(graph,argmaxOutput,fileName,virtual_tensor_flag):
 #include <unistd.h>
 #include <math.h>
 #include <half.hpp>
-#include <immintrin.h>
+//#include <immintrin.h>
 #include <map>
 using half_float::half;
 
