@@ -194,7 +194,7 @@ def onnx_graph_to_ir_graph(onnx_graph):
         graph.addOutput(onnx_value_info_to_data(tensor, output_dims))
     tensorAliasList = {}
     for onnx_node in onnx_graph.node:
-        if onnx_node.op_type == 'Dropout':
+        if onnx_node.op_type == 'Dropout' or onnx_node.op_type == 'Flatten':
             tensorAliasList[onnx_node.output[0]] = onnx_node.input[0]
         else:
             for i in range(len(onnx_node.input)):
