@@ -2215,7 +2215,7 @@ static vx_status copyTensor(std::string tensorName, vx_tensor tensor, std::strin
                     if(!(err < maxError)) maxError = err;
                 }
             }
-            else if(data_type == VX_TYPE_FLOAT16)
+            /*else if(data_type == VX_TYPE_FLOAT16)
             {
                 for(size_t i = 0; i < count; i++) {
                     float src = _cvtsh_ss(((unsigned short*)ptr)[i]);
@@ -2224,7 +2224,7 @@ static vx_status copyTensor(std::string tensorName, vx_tensor tensor, std::strin
                     sqrError += err * err;
                     if(!(err < maxError)) maxError = err;
                 }
-            }
+            }*/
             delete[] gold;
             float rmsError = (float)sqrt(sqrError/count);
             bool isError = !(rmsError <= rmsErrorLimit) || !(maxError <= maxErrorLimit);
