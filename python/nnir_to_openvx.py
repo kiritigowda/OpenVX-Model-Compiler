@@ -121,7 +121,7 @@ endif()
 
 list(APPEND SOURCES annmodule.cpp)
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mf16c -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 target_link_libraries(${PROJECT_NAME} ${OPENVX_LIBRARIES})
 
 add_executable(anntest anntest.cpp)
@@ -136,7 +136,7 @@ endif(OpenCV_FOUND)
 target_link_libraries(anntest ${OPENVX_LIBRARIES} ${PROJECT_NAME})
 
 add_library(annpython SHARED annpython.cpp)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mf16c -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 target_link_libraries(annpython ${PROJECT_NAME} ${OPENVX_LIBRARIES})
 """)
     if not os.path.isdir(outputFolder + '/cmake'):
@@ -1713,7 +1713,7 @@ def generateTestCPP(graph,argmaxOutput,fileName,virtual_tensor_flag):
 #include <unistd.h>
 #include <math.h>
 #include <half.hpp>
-#include <immintrin.h>
+//#include <immintrin.h>
 #include <map>
 using half_float::half;
 
@@ -2215,7 +2215,7 @@ static vx_status copyTensor(std::string tensorName, vx_tensor tensor, std::strin
                     if(!(err < maxError)) maxError = err;
                 }
             }
-            else if(data_type == VX_TYPE_FLOAT16)
+            /*else if(data_type == VX_TYPE_FLOAT16)
             {
                 for(size_t i = 0; i < count; i++) {
                     float src = _cvtsh_ss(((unsigned short*)ptr)[i]);
@@ -2224,7 +2224,7 @@ static vx_status copyTensor(std::string tensorName, vx_tensor tensor, std::strin
                     sqrError += err * err;
                     if(!(err < maxError)) maxError = err;
                 }
-            }
+            }*/
             delete[] gold;
             float rmsError = (float)sqrt(sqrError/count);
             bool isError = !(rmsError <= rmsErrorLimit) || !(maxError <= maxErrorLimit);
