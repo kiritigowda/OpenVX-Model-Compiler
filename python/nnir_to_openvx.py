@@ -284,7 +284,11 @@ static vx_status initializeTensor(vx_context context, vx_tensor tensor, FILE * f
 
     vx_map_id map_id;
     void * ptr;
-    ERROR_CHECK_STATUS(vxMapTensorPatch(tensor, num_of_dims, nullptr, nullptr, &map_id, stride, (void **)&ptr, VX_WRITE_ONLY, VX_MEMORY_TYPE_HOST));
+    vx_size view_start[num_of_dims] = { 0 };
+    vx_size view_end[num_of_dims];
+    for(int i = 0; i < num_of_dims; i++)
+        view_end[i] = dims[i];
+    ERROR_CHECK_STATUS(vxMapTensorPatch(tensor, num_of_dims, view_start, view_end, &map_id, stride, (void **)&ptr, VX_WRITE_ONLY, VX_MEMORY_TYPE_HOST));
     vx_size n = fread(ptr, itemsize, count, fp);
     if(n != count) {
         vxAddLogEntry((vx_reference)tensor, VX_FAILURE, "ERROR: expected char[%%ld], but got char[%%ld] in %%s\\n", count*itemsize, n*itemsize, binaryFilename);
@@ -369,12 +373,12 @@ static vx_status initializeTensor(vx_context context, vx_tensor tensor, FILE * f
 """%(tensor.name, len(tensor.shape), ', '.join([str(v) for v in reversed(tensor.shape)])))
                 if virtual_tensor_flag == 0:
                     f.write( \
-"""    vx_tensor %s = vxCreateTensor(context, %d, dims_%s, %s, 0);
+"""    vx_tensor %s = vxCreateTensor(context, %d, dims_%s, %s, 8);
     tensorMap.insert(std::pair<std::string, vx_tensor>("%s", %s));        
 """%(tensor.name, len(tensor.shape), tensor.name, tensor_type_nnir2openvx[tensor.type], tensor.name, tensor.name))
                 else:
                     f.write( \
-"""    vx_tensor %s = vxCreateVirtualTensor(graph, %d, dims_%s, %s, 0);
+"""    vx_tensor %s = vxCreateVirtualTensor(graph, %d, dims_%s, %s, 8);
 """%(tensor.name, len(tensor.shape), tensor.name, tensor_type_nnir2openvx[tensor.type]))
                 f.write( \
 """    ERROR_CHECK_OBJECT(%s);
