@@ -801,7 +801,7 @@ class IrGraph:
                     weight = np.frombuffer(self.binaries[binary], dtype=np.float32)
                     self.addBinary(binary, np.getbuffer(weight.astype(np.float16)))
 
-                #print("Add binary %s of size %d at Idx: %d len: %d" %(binary, len(self.binaries[binary]), idx, len(self.binaries)))
+                print("Add binary %s of size %d at Idx: %d len: %d" %(binary, len(self.binaries[binary]), idx, len(self.binaries)))
             self.all_F032 = False
             self.all_F016 = True    
         else:

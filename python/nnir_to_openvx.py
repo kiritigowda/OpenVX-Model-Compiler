@@ -319,7 +319,7 @@ static vx_status initializeTensor(vx_context context, vx_tensor tensor, FILE * f
         for tensor in graph.initializers:
             f.write( \
 """    vx_size dims_%s[%d] = { %s };
-    vx_tensor %s = vxCreateTensor(context, %d, dims_%s, %s, 0);
+    vx_tensor %s = vxCreateTensor(context, %d, dims_%s, %s, 8);
     ERROR_CHECK_OBJECT(%s);
 """ %(tensor.name, len(tensor.shape), ', '.join([str(v) for v in reversed(tensor.shape)]), \
       tensor.name, len(tensor.shape), tensor.name, tensor_type_nnir2openvx[tensor.type], tensor.name))
@@ -1803,8 +1803,8 @@ static vx_status copyTensor(std::string tensorName, vx_tensor tensor, std::strin
     vxQueryTensor(tensor, VX_TENSOR_DATA_TYPE, &data_type, sizeof(data_type));
     vxQueryTensor(tensor, VX_TENSOR_NUMBER_OF_DIMS, &num_of_dims, sizeof(num_of_dims));
     vxQueryTensor(tensor, VX_TENSOR_DIMS, &dims, sizeof(dims[0])*num_of_dims);
-    if((data_type != VX_TYPE_FLOAT32) && (data_type != VX_TYPE_FLOAT16) && (data_type != VX_TYPE_INT64) && (data_type != VX_TYPE_INT32)) {
-        std::cerr << "ERROR: copyTensor() supports only VX_TYPE_FLOAT32 or VX_TYPE_FLOAT16 or VX_TYPE_INT64 or VX_TYPE_INT32: invalid for " << fileName << std::endl;
+    if((data_type != VX_TYPE_FLOAT32) && (data_type != VX_TYPE_FLOAT16) && (data_type != VX_TYPE_INT64) && (data_type != VX_TYPE_INT32) && (data_type != VX_TYPE_INT16)) {
+        std::cerr << "ERROR: copyTensor() supports only VX_TYPE_FLOAT32 or VX_TYPE_FLOAT16 or VX_TYPE_INT64 or VX_TYPE_INT32 or VX_TYPE_INT16: invalid for " << fileName << std::endl;
         return -1;
     }
     vx_size count = dims[0] * dims[1] * dims[2] * dims[3];
@@ -1839,7 +1839,7 @@ static vx_status copyTensor(std::string tensorName, vx_tensor tensor, std::strin
                             *dstG++ = (src[1] * mulVec[1]) + addVec[1];
                             *dstB++ = (src[0] * mulVec[2]) + addVec[2];
                         }
-                    } else if(data_type == VX_TYPE_FLOAT16) {
+                    } else if(data_type == VX_TYPE_FLOAT16 || data_type == VX_TYPE_INT16) {
                         short * dstR = (short *)ptr + ((n * stride[3] + y * stride[1]) >> 1);
                         short * dstG = dstR + (stride[2] >> 2);
                         short * dstB = dstG + (stride[2] >> 2);                    
@@ -1891,7 +1891,7 @@ static vx_status copyTensor(std::string tensorName, vx_tensor tensor, std::strin
                             for(size_t x = 0; x < dims[0]; x++) {
                                 *(ptrY+x) = *(ptrY+x) * mulVec[c] + addVec[c];
                             }
-                        } else if(data_type == VX_TYPE_FLOAT16){
+                        } else if(data_type == VX_TYPE_FLOAT16 || data_type == VX_TYPE_INT16){
                             short * ptrY = (short *)ptr + ((n * stride[3] + c * stride[2] + y * stride[1]) >> 1);
                             vx_size n = fread(ptrY, sizeof(short), dims[0], fp);
                             if(n != dims[0]) {
@@ -2178,7 +2178,7 @@ static vx_status copyTensor(std::string tensorName, vx_tensor tensor, std::strin
             }
             if (data_type == VX_TYPE_FLOAT32)
                 fwrite(ptr, sizeof(float), count, fp);
-            else if (data_type == VX_TYPE_FLOAT16)
+            else if (data_type == VX_TYPE_FLOAT16 || data_type == VX_TYPE_INT16)
                 fwrite(ptr, sizeof(short), count, fp);
             else if (data_type == VX_TYPE_INT64)
                 fwrite(ptr, sizeof(long int), count, fp); 
@@ -2338,8 +2338,9 @@ int main(int argc, const char ** argv)
 """
     // create and initialize input tensor %s
     vx_size dims_%s[%d] = { %s };
-    vx_tensor %s = vxCreateTensor(context, %d, dims_%s, %s, 0);
+    vx_tensor %s = vxCreateTensor(context, %d, dims_%s, %s, 8);
     if(vxGetStatus((vx_reference)%s)) {
+        status = vxGetStatus((vx_reference)%s);
         printf("ERROR: vxCreateTensor() failed for %s\\n");
         return -1;
     }
@@ -2354,13 +2355,13 @@ int main(int argc, const char ** argv)
     }
 """ % (tensor.name, tensor.name, len(tensor.shape), ', '.join([str(v) for v in reversed(tensor.shape)]), \
        tensor.name, len(tensor.shape), tensor.name, tensor_type_nnir2openvx[tensor.type], \
-       tensor.name, tensor.name, tensor.name, tensor.name, tensor.name))
+       tensor.name, tensor.name, tensor.name, tensor.name, tensor.name, tensor.name))
         for tensor in graph.outputs:
             f.write( \
 """
     // create output tensor %s
     vx_size dims_%s[%d] = { %s };
-    vx_tensor %s = vxCreateTensor(context, %d, dims_%s, %s, 0);
+    vx_tensor %s = vxCreateTensor(context, %d, dims_%s, %s, 8);
     if(vxGetStatus((vx_reference)%s)) {
         printf("ERROR: vxCreateTensor() failed for %s\\n");
         return -1;
