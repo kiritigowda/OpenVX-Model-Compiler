@@ -259,8 +259,8 @@ class IrGraph:
         self.output_names.append(tensor.name)
 
     def addVariable(self,tensor):
-        if len(tensor.shape) == 1:
-            tensor.shape = [1, tensor.shape[0]]
+        #if len(tensor.shape) == 1:
+        #    tensor.shape = [1, tensor.shape[0]]
         self.initializers.append(tensor)
         self.tensor_dict[tensor.name] = tensor
         self.tensor_types[tensor.name] = tensor.type
