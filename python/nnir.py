@@ -380,13 +380,13 @@ class IrGraph:
                         node.attr.set('transB', 1)
                         transB = 1
                     if transA == 0 and transB == 0:
-                        output_shape = [shapeA[0], shapeB[1], 1, 1]
+                        output_shape = [shapeA[0], shapeB[1]]
                     elif transA == 0:
-                        output_shape = [shapeA[0], shapeB[0], 1, 1]
+                        output_shape = [shapeA[0], shapeB[0]]
                     elif transB == 0:
-                        output_shape = [shapeA[1], shapeB[1], 1, 1]
+                        output_shape = [shapeA[1], shapeB[1]]
                     else:
-                        output_shape = [shapeA[1], shapeB[0], 1, 1]
+                        output_shape = [shapeA[1], shapeB[0]]
                     local = IrTensor()
                     local.setName(output)
                     local.setInfo(input.type, output_shape)

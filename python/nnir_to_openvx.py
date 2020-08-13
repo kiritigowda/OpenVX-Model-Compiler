@@ -486,13 +486,13 @@ static vx_status initializeTensor(vx_context context, vx_tensor tensor, FILE * f
             elif node.type == 'max_pool' or node.type == 'avg_pool':
                 f.write( \
 """
-    { vx_node node = vxPoolingLayer(graph, %s, %s, %d, %d, %d, %d, VX_ROUND_POLICY_TO_NEAREST_EVEN, %s);
+    { vx_node node = vxPoolingLayer(graph, %s, %s, %d, %d, %d, %d, VX_NN_DS_SIZE_ROUNDING_FLOOR, %s);
       ERROR_CHECK_OBJECT(node);
-      vx_enum border_mode = %d;
-      vx_scalar s_border_mode = vxCreateScalarWithSize(context, VX_TYPE_ENUM, &border_mode, sizeof(border_mode));
-      ERROR_CHECK_OBJECT(s_border_mode);
-      ERROR_CHECK_STATUS(vxSetParameterByIndex(node, 8, (vx_reference) s_border_mode));
-      ERROR_CHECK_STATUS(vxReleaseScalar(&s_border_mode));
+      //vx_enum border_mode = %d;
+      //vx_scalar s_border_mode = vxCreateScalarWithSize(context, VX_TYPE_ENUM, &border_mode, sizeof(border_mode));
+      //ERROR_CHECK_OBJECT(s_border_mode);
+      //ERROR_CHECK_STATUS(vxSetParameterByIndex(node, 8, (vx_reference) s_border_mode));
+      //ERROR_CHECK_STATUS(vxReleaseScalar(&s_border_mode));
 """ % (node.inputs[0], 'VX_NN_POOLING_AVG' if node.type == 'avg_pool' else 'VX_NN_POOLING_MAX', \
        node.attr.get('kernel_shape')[0], node.attr.get('kernel_shape')[1], \
        node.attr.get('pads')[0], node.attr.get('pads')[1], node.outputs[0], \
