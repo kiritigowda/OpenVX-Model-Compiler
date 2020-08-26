@@ -189,8 +189,8 @@ def onnx_graph_to_ir_graph(onnx_graph):
         if (x == 0 or x is None or x == '?' for x in output_dims):
             if inputUser == True:
                 output_dims[0] = input_dims[0]
-        while len(output_dims) != 4:
-            output_dims.append(1)
+        #while len(output_dims) != 4:
+        #    output_dims.append(1)
         graph.addOutput(onnx_value_info_to_data(tensor, output_dims))
     tensorAliasList = {}
     for onnx_node in onnx_graph.node:

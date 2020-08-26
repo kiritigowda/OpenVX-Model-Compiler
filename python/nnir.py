@@ -259,8 +259,8 @@ class IrGraph:
         self.output_names.append(tensor.name)
 
     def addVariable(self,tensor):
-        if len(tensor.shape) == 1:
-            tensor.shape = [1, tensor.shape[0]]
+        #if len(tensor.shape) == 1:
+        #    tensor.shape = [1, tensor.shape[0]]
         self.initializers.append(tensor)
         self.tensor_dict[tensor.name] = tensor
         self.tensor_types[tensor.name] = tensor.type
@@ -380,13 +380,13 @@ class IrGraph:
                         node.attr.set('transB', 1)
                         transB = 1
                     if transA == 0 and transB == 0:
-                        output_shape = [shapeA[0], shapeB[1], 1, 1]
+                        output_shape = [shapeA[0], shapeB[1]]
                     elif transA == 0:
-                        output_shape = [shapeA[0], shapeB[0], 1, 1]
+                        output_shape = [shapeA[0], shapeB[0]]
                     elif transB == 0:
-                        output_shape = [shapeA[1], shapeB[1], 1, 1]
+                        output_shape = [shapeA[1], shapeB[1]]
                     else:
-                        output_shape = [shapeA[1], shapeB[0], 1, 1]
+                        output_shape = [shapeA[1], shapeB[0]]
                     local = IrTensor()
                     local.setName(output)
                     local.setInfo(input.type, output_shape)
@@ -801,7 +801,7 @@ class IrGraph:
                     weight = np.frombuffer(self.binaries[binary], dtype=np.float32)
                     self.addBinary(binary, np.getbuffer(weight.astype(np.float16)))
 
-                #print("Add binary %s of size %d at Idx: %d len: %d" %(binary, len(self.binaries[binary]), idx, len(self.binaries)))
+                print("Add binary %s of size %d at Idx: %d len: %d" %(binary, len(self.binaries[binary]), idx, len(self.binaries)))
             self.all_F032 = False
             self.all_F016 = True    
         else:
